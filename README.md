@@ -1,4 +1,16 @@
-# Mi asistente
+# Asistente de estudio de Nicole
+
+Personalización del trabajo final: tutor en español para explicar conceptos, proponer ejercicios
+y organizar sesiones de estudio. Añade `planificar_estudio`, una herramienta de Python que
+reparte un presupuesto de tiempo entre repaso, práctica, descanso y autoevaluación.
+Conserva los ejemplos del curso de APIs, gastos y documentos; no guarda memoria entre mensajes.
+
+Preguntas para probar:
+- «Tengo 60 minutos para estudiar funciones y listas de Python. Organízame una sesión».
+- «Explícame una función con un ejemplo sencillo».
+- «Dame un ejercicio de listas y espera mi respuesta antes de mostrar la solución».
+
+## Documentación de la plantilla original
 
 Plantilla del trabajo final del curso **«Más allá de los chatbots»** de Alex Ojeda Copa. Es el asistente que armamos en clase con [Pydantic AI](https://pydantic.dev/docs/ai/), convertido en un **bot de Telegram** desplegado gratis en **Render**.
 

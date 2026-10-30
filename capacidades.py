@@ -19,6 +19,53 @@ from pypdf import PdfReader
 
 from config import DATOS, settings
 
+# ═══ Personalización · Organizar sesiones de estudio ═══════════════════════════════
+estudio = Capability(
+    id="estudio",
+    description="Organiza sesiones de estudio por temas y tiempo disponible",
+    instructions=(
+        "Para organizar una sesión usa planificar_estudio. Si faltan los temas o el tiempo "
+        "disponible, pregúntalos primero. Respeta los minutos que devuelve la herramienta. "
+        "El plan es una propuesta; no crea eventos ni recordatorios."
+    ),
+)
+
+
+@estudio.tool_plain
+def planificar_estudio(temas: list[str], minutos: int) -> dict:
+    """Reparte el tiempo entre repaso, práctica por tema y autoevaluación.
+
+    Args:
+        temas: de uno a seis temas concretos que la persona quiere estudiar
+        minutos: tiempo total disponible, entre 15 y 180 minutos
+    """
+    if not 15 <= minutos <= 180:
+        return {"error": "El tiempo debe estar entre 15 y 180 minutos."}
+    temas = [tema.strip() for tema in temas if tema.strip()]
+    if not 1 <= len(temas) <= 6:
+        return {"error": "Indica entre uno y seis temas de estudio."}
+
+    repaso = max(3, min(10, minutos // 5))
+    evaluacion = max(3, min(15, minutos // 5))
+    pausa = 5 if minutos >= 45 else 0
+    disponibles = minutos - repaso - evaluacion - pausa
+    if disponibles < 3 * len(temas):
+        return {"error": "Hay poco tiempo por tema. Elige menos temas o aumenta los minutos."}
+
+    por_tema, sobrantes = divmod(disponibles, len(temas))
+    bloques = [{"actividad": "Repasar lo que ya sabes y anotar dudas", "minutos": repaso}]
+    for i, tema in enumerate(temas):
+        bloques.append({"actividad": f"Estudiar y practicar: {tema}", "minutos": por_tema + (i < sobrantes)})
+        if pausa and i == (len(temas) - 1) // 2:
+            bloques.append({"actividad": "Descanso", "minutos": pausa})
+    bloques.append({"actividad": "Autoevaluación: explicar sin mirar y revisar errores", "minutos": evaluacion})
+    return {
+        "minutos_totales": minutos,
+        "bloques": bloques,
+        "fuente": "Planificador local del asistente de estudio",
+    }
+
+
 # ═══ S1 · Tools de lectura con APIs públicas ══════════════════════════════════════════
 apis = Capability(
     id="apis_publicas",
