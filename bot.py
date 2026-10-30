@@ -33,7 +33,7 @@ async def mensaje(update: Update, context: ContextTypes.DEFAULT_TYPE) -> None:
         await update.message.reply_text(f"No autorizado. Tu chat es {chat}: pídele al dueño que lo añada.")
         return
     try:
-        respuesta = await responder(update.message.text)
+        respuesta = await responder(update.message.text, chat_id=chat)
     except Exception as error:  # cuota agotada (429), una API caída…: se avisa en vez de quedarse callado
         print("Error:", repr(error)[:300], flush=True)  # el detalle, en la terminal o en los Logs de Render
         respuesta = "Algo falló (el modelo o una herramienta). Intenta de nuevo en un minuto."

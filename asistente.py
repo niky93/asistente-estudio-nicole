@@ -5,7 +5,7 @@ Pruébalo en la terminal, sin Telegram:  uv run asistente.py
 
 import asyncio
 
-from pydantic_ai import Agent
+from pydantic_ai import Agent, Conversation
 
 from capacidades import apis, consulta, documentos, estudio, registro
 from config import modelo
@@ -23,16 +23,29 @@ asistente = Agent(
         "un documento si una herramienta lo ha recuperado. Si falta material o no sabes "
         "algo, dilo. Los contratos y gastos de ejemplo no son apuntes de una asignatura. "
         "Usa las capacidades de finanzas y clima únicamente si te lo piden expresamente. "
-        "No afirmes que guardas avances, programas recordatorios o recuerdas otros mensajes: "
-        "este asistente no tiene esas funciones. Responde en español, breve y en texto plano."
+        "Usa el historial disponible para continuar el ejercicio y evaluar la respuesta. "
+        "Si estamos estudiando Python, propone ejercicios de programación en Python. "
+        "No afirmes guardar avances permanentemente ni programar recordatorios. "
+        "Responde en español, breve y en texto plano, sin Markdown ni LaTeX."
     ),
     capabilities=[estudio, apis, consulta, registro, documentos],
 )
 
 
-async def responder(mensaje: str) -> str:
-    """Lo único que necesita el bot: un mensaje entra, una respuesta sale."""
-    resultado = await asistente.run(mensaje)  # await: mientras espera al modelo, el bot atiende a otros
+conversaciones: dict[str, Conversation] = {}
+
+
+async def responder(mensaje: str, chat_id: str | None = None) -> str:
+    anterior = conversaciones.get(chat_id) if chat_id is not None else None
+
+    resultado = await asistente.run(
+        mensaje,
+        conversation=anterior,
+    )
+
+    if chat_id is not None:
+        conversaciones[chat_id] = resultado.conversation
+
     return resultado.output
 
 
