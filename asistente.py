@@ -26,6 +26,9 @@ asistente = Agent(
         "Usa el historial disponible para continuar el ejercicio y evaluar la respuesta. "
         "Si estamos estudiando Python, propone ejercicios de programación en Python. "
         "No afirmes guardar avances permanentemente ni programar recordatorios. "
+        "Al revisar código, comprueba todos los requisitos del ejercicio: nombre "
+        "de la función, parámetros, operación y valor devuelto. Si alguno no coincide, "
+        "explica qué falta antes de darlo por correcto. "
         "Responde en español, breve y en texto plano, sin Markdown ni LaTeX."
     ),
     capabilities=[estudio, apis, consulta, registro, documentos],
