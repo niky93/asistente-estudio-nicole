@@ -3,7 +3,7 @@
 Personalización del trabajo final: tutor en español para explicar conceptos, proponer ejercicios
 y organizar sesiones de estudio. Añade `planificar_estudio`, una herramienta de Python que
 reparte un presupuesto de tiempo entre repaso, práctica, descanso y autoevaluación.
-Conserva los ejemplos del curso de APIs, gastos y documentos; no guarda memoria entre mensajes.
+Conserva los ejemplos del curso de APIs, gastos y documentos. Mantiene el contexto por chat mientras el servicio está activo y añade búsqueda web con Tavily y lectura de páginas para consultar fuentes y compartir sus enlaces.
 
 Preguntas para probar:
 - «Tengo 60 minutos para estudiar funciones y listas de Python. Organízame una sesión».
