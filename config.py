@@ -37,7 +37,8 @@ class Settings(BaseSettings):
     telegram_permitidos: str = ""  # números de chat separados por coma; vacío = nadie
 
     api_tokens: SecretStr = SecretStr("")  # extra opcional (API.md): tokens de la API separados por coma; vacío = nadie
-
+    tavily_api_key: SecretStr = SecretStr("")
+    
     @property
     def permitidos(self) -> set[str]:
         return {c.strip() for c in self.telegram_permitidos.split(",") if c.strip()}
