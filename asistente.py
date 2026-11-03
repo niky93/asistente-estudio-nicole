@@ -12,7 +12,7 @@ from config import modelo, settings
 from pydantic_ai.capabilities import WebSearch, WebFetch
 from pydantic_ai.common_tools.tavily import tavily_search_tool
 from pydantic_ai.common_tools.web_fetch import web_fetch_tool
-
+from memoria import cargar_conversacion, guardar_conversacion
 
 
 busqueda_web = []
@@ -64,11 +64,11 @@ asistente = Agent(
 )
 
 
-conversaciones: dict[str, Conversation] = {}
-
-
 async def responder(mensaje: str, chat_id: str | None = None) -> str:
-    anterior = conversaciones.get(chat_id) if chat_id is not None else None
+    anterior = None
+
+    if chat_id is not None:
+        anterior = await cargar_conversacion(chat_id)
 
     resultado = await asistente.run(
         mensaje,
@@ -76,7 +76,7 @@ async def responder(mensaje: str, chat_id: str | None = None) -> str:
     )
 
     if chat_id is not None:
-        conversaciones[chat_id] = resultado.conversation
+        await guardar_conversacion(chat_id, resultado.conversation)
 
     return resultado.output
 
